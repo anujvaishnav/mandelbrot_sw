@@ -9,7 +9,9 @@ in Windows.
 
 ./mandelbrot_sw.out
 
-This should pop up a window shown below
+This should pop up a window shown below:
+
+![Mandelbrot](mandelbrot.png)
 
 Keyboard interface
 

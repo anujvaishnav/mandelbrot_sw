@@ -76,7 +76,7 @@ void drawPixel(int x, int y, int color)
 	XDrawPoint(dis, win, gc, x, y);
 }
 
-void close_display()
+void closeDisplay()
 {
   XFreeGC(dis, gc);
 	XDestroyWindow(dis, win);
@@ -162,8 +162,6 @@ void main()
   {
     printf("created window\n");
     
-/*	  XEvent ev;*/
-    
     XEvent event;		/* the XEvent declaration !!! */
 	  KeySym key;		/* a dealie-bob to handle KeyPress Events */	
 	  char text[255];		/* a char buffer for KeyPress Events */
@@ -230,7 +228,7 @@ void main()
 		  
 	  } // while
 	  
-    close_display();
+    closeDisplay();
   } // if
   else
   {

@@ -185,8 +185,8 @@ int mandelbrot(uint32_t ImageWidth, uint32_t ImageHeight,
 
 void main()
 {
-  ImageWidth = 1000;
-  ImageHeight = 1000;
+  ImageWidth = 500;
+  ImageHeight = 500;
   unsigned int MaxIterations = 50;
   
   int zoom = 1;
@@ -258,7 +258,7 @@ void main()
       // continue drawing otherwise
       mandelbrot(ImageWidth, ImageHeight, MaxIterations, 
                  floatToFixed(cRe), floatToFixed(cIm), 
-                 floatToFixed((double)0.01 / ((ImageHeight/500)*zoom)));
+                 floatToFixed((double)0.01 / ((ImageHeight/500.0)*zoom)));
       
       if(zoom_on)
         zoom++;

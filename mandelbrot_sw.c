@@ -67,8 +67,8 @@ void close_display()
 	exit(1);
 }
 
-int mandelbrot(uint ImageWidth, uint ImageHeight, uint MaxIterations, 
-               double cRe, double cIm, uint zoom)
+int mandelbrot(uint32_t ImageWidth, uint32_t ImageHeight, uint32_t MaxIterations, 
+               double cRe, double cIm, uint32_t zoom)
 {
 
   double Re_factor = 0.01 / zoom;
@@ -80,7 +80,7 @@ int mandelbrot(uint ImageWidth, uint ImageHeight, uint MaxIterations,
   double MaxRe = MinRe + Re_factor*ImageWidth;
   double MaxIm = MinIm + Im_factor*ImageHeight;
 
-  uint colour_unit = (uint)((1 << 24) / (MaxIterations));
+  uint32_t colour_unit = (uint32_t)((1 << 24) / (MaxIterations));
 
   for(unsigned y = 0; y < ImageHeight; y++)
   {
@@ -97,17 +97,17 @@ int mandelbrot(uint ImageWidth, uint ImageHeight, uint MaxIterations,
       
       for(n = 0; n < MaxIterations; n++)
       {
-        if(Z_re*Z_re + Z_im*Z_im > 4) // |z| > 2
+        double Z_im2 = Z_im*Z_im;
+        double Z_re2 = Z_re*Z_re;
+        
+        if(Z_re2 + Z_im2 > 4) // |z| > 2
         {
           isInside = false;
           break;
         }
         /*
-          Z = Z^2 + c
           N.B. Z^2 = (a + bi)^2 = (a^2 - b^2) + (2ab)i
         */
-        double Z_im2 = Z_im*Z_im;
-        double Z_re2 = Z_re*Z_re;
         
         Z_im = 2*Z_re*Z_im + c_im;
         Z_re = Z_re2 - Z_im2 + c_re;

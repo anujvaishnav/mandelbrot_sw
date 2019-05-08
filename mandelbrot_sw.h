@@ -11,3 +11,6 @@
 Display* dis;
 Window win;
 GC gc;
+
+unsigned int ImageWidth;
+unsigned int ImageHeight;

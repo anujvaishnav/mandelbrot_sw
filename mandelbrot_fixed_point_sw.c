@@ -17,29 +17,26 @@ typedef long fixed_point_t;
 // multiply fixed point integers
 #define multFixed(a,b) ((a * b) >> NORM_BITS)
 
-int createWindow(int width, int height)
+Display* createDisplay()
 {
-  unsigned long black, white;
-  
   //Open Display
 	dis = XOpenDisplay(getenv("DISPLAY"));
 	if (dis == NULL) {
-		printf("Couldn't open display.\n");
-		return -1;
+		perror("Couldn't open display.\n");
+		exit(-1);
 	}
+	return dis;
+}
 
-	//Create Window
-	int const x = 0, y = 0, border_width = 1;
-	int screen    = DefaultScreen(dis);
-	Window ro     = DefaultRootWindow(dis);
-	black = BlackPixel(dis,screen),	/* get color black */
-	white = WhitePixel(dis, screen);  /* get color white */
-	
-	win = XCreateSimpleWindow(dis, ro, x, y, width, height, border_width, 
-                              black, white);
-                              
-	XMapWindow(dis, win); //Make window visible
+void setWindowCharateristics(int screen, Window ro)
+{
+  unsigned long black, white;
+  
+  XMapWindow(dis, win); //Make window visible
 	XStoreName(dis, win, "Mandelbrot"); // Set window title
+	
+	black = BlackPixel(dis, screen),	/* get color black */
+	white = WhitePixel(dis, screen);  /* get color white */
 	
 	/* this routine determines which types of input are allowed in
 	   the input.  see the appropriate section for details...
@@ -58,7 +55,46 @@ int createWindow(int width, int height)
 	/* clear the window and bring it on top of the other windows */
 	XClearWindow(dis, win);
 	XMapRaised(dis, win);
+}
+
+int createWindow(int width, int height)
+{
+  unsigned long black, white;
+  
+  createDisplay();
+
+	//Create Window
+	int const x = 0, y = 0, border_width = 1;
+	int screen    = DefaultScreen(dis);
+	Window ro     = DefaultRootWindow(dis);
+	black = BlackPixel(dis,screen),	/* get color black */
+	white = WhitePixel(dis, screen);  /* get color white */
 	
+	win = XCreateSimpleWindow(dis, ro, x, y, width, height, border_width, 
+                              black, white);
+                              
+	setWindowCharateristics(screen, ro);
+	return 0;
+}
+
+int createMaxWindow()
+{
+  unsigned long black, white;
+  
+  createDisplay();
+
+	//Create Window
+	int screen    = DefaultScreen(dis);
+/*	int width = XDisplayWidth(dis, screen);*/
+	int height = XDisplayHeight(dis, screen);
+  int width = height;
+	
+	// making an image square as we need to move the center point 
+	// if width is different
+	ImageWidth = height;
+	ImageHeight = height;
+	
+	createWindow(width, height);
 	return 0;
 }
 
@@ -86,11 +122,10 @@ void closeDisplay()
 
 int mandelbrot(uint32_t ImageWidth, uint32_t ImageHeight, 
                uint32_t MaxIterations, fixed_point_t cRe, fixed_point_t cIm,  
-               uint32_t zoom)
+               fixed_point_t zoom)
 {
-
-  fixed_point_t Re_factor = floatToFixed((double)0.01 / zoom);
-  fixed_point_t Im_factor = floatToFixed((double)0.01 / zoom);
+  fixed_point_t Re_factor = zoom; //floatToFixed((double)0.01 / zoom);
+  fixed_point_t Im_factor = zoom; //floatToFixed((double)0.01 / zoom);
   
   fixed_point_t MinRe = cRe - multFixed(Re_factor, 
                                             floatToFixed(ImageWidth/2));
@@ -150,8 +185,8 @@ int mandelbrot(uint32_t ImageWidth, uint32_t ImageHeight,
 
 void main()
 {
-  unsigned int ImageWidth = 500;
-  unsigned int ImageHeight = 500;
+  ImageWidth = 1000;
+  ImageHeight = 1000;
   unsigned int MaxIterations = 50;
   
   int zoom = 1;
@@ -159,6 +194,7 @@ void main()
   double cIm = -0.18;
 
   if(createWindow(ImageWidth, ImageHeight) != -1)
+/*  if(createMaxWindow() != -1)*/
   {
     printf("created window\n");
     
@@ -199,7 +235,7 @@ void main()
 				      cRe = -1.25;
               cIm = -0.18;
 				      break;
-				    // Move left and right  
+				    // Move left, right, up and down  
 				    case 'a':
 				      cRe -= 0.1;
 				      break;
@@ -221,7 +257,8 @@ void main()
 			
 			// continue drawing otherwise
 	    mandelbrot(ImageWidth, ImageHeight, MaxIterations, 
-                 floatToFixed(cRe), floatToFixed(cIm), zoom);
+                 floatToFixed(cRe), floatToFixed(cIm), 
+                 floatToFixed((double)0.01 / ((ImageHeight/500)*zoom)));
 		  
 		  if(zoom_on)
 		    zoom++;

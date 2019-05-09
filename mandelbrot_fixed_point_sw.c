@@ -269,7 +269,7 @@ void main()
 			      drawPixel(j, i, buildColor(0, 0, 255));
       
       char* status = (char*)malloc(100 * sizeof(char));
-      sprintf(status, "Softawre Mandelbrot; Zoom: %d;  cRe: %lf; cIm: %lf",
+      sprintf(status, "Software Mandelbrot; Zoom: %d;  cRe: %lf; cIm: %lf",
               zoom, cRe, cIm);
       
       XSetForeground(dis, gc, buildColor(255, 0, 0));

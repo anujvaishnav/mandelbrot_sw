@@ -85,14 +85,15 @@ int createMaxWindow()
 
   //Create Window
   int screen    = DefaultScreen(dis);
-/*  int width = XDisplayWidth(dis, screen);*/
+  int width = XDisplayWidth(dis, screen);
   int height = XDisplayHeight(dis, screen);
-  int width = height;
+/*  int width = height;*/
   
   // making an image square as we need to move the center point 
   // if width is different
-  ImageWidth = height;
-  ImageHeight = height;
+  int drawing_size = (width > height)? height : width;
+  ImageWidth = drawing_size;
+  ImageHeight = drawing_size;
   
   createWindow(width, height);
   return 0;
@@ -193,7 +194,9 @@ void main()
   double cRe = -1.25;
   double cIm = -0.18;
 
-  if(createWindow(ImageWidth, ImageHeight) != -1)
+  int text_height = 15;
+
+  if(createWindow(ImageWidth, ImageHeight + text_height) != -1)
 /*  if(createMaxWindow() != -1)*/
   {
     printf("created window\n");
@@ -259,6 +262,20 @@ void main()
       mandelbrot(ImageWidth, ImageHeight, MaxIterations, 
                  floatToFixed(cRe), floatToFixed(cIm), 
                  floatToFixed((double)0.01 / ((ImageHeight/500.0)*zoom)));
+      
+      // clear old string
+      for(int i = ImageHeight; i < ImageHeight + text_height; i++)
+      	for(int j = 0; j < ImageWidth; j++)
+			      drawPixel(j, i, buildColor(0, 0, 255));
+      
+      char* status = (char*)malloc(100 * sizeof(char));
+      sprintf(status, "Softawre Mandelbrot; Zoom: %d;  cRe: %lf; cIm: %lf",
+              zoom, cRe, cIm);
+      
+      XSetForeground(dis, gc, buildColor(255, 0, 0));
+      
+      XDrawString(dis, win, gc, 0, ImageHeight + text_height - 2, 
+                  status, strlen(status));
       
       if(zoom_on)
         zoom++;

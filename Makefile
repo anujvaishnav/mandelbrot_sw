@@ -9,6 +9,9 @@ mandelbrot:
 fixed_point: 
 	$(CC) mandelbrot_fixed_point_sw.c $(LDFLAGS) -o mandelbrot_fixed_point_sw.out
 
+julia: 
+	$(CC) julia_fixed_point_sw.c $(LDFLAGS) -o julia_fixed_point_sw.out
+
 simple_drawing:
 	$(CC) simple-drawing.c $(LDFLAGS) -o simple-drawing.out
 

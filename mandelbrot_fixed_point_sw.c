@@ -244,8 +244,10 @@ void main()
               zoom = 1;
               zoom_on = false;
               
-              cRe = -1.25;
-              cIm = -0.18;
+              //cRe = -1.25;
+              //cIm = -0.18;
+              cRe = -0.76;
+              cIm = -0.102;
               break;
             // Move left, right, up and down  
             case 'a':

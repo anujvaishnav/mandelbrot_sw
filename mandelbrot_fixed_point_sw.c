@@ -186,8 +186,8 @@ int mandelbrot(uint32_t ImageWidth, uint32_t ImageHeight,
 
 void main()
 {
-  ImageWidth = 500;
-  ImageHeight = 500;
+  ImageWidth = 1000;
+  ImageHeight = 1000;
   unsigned int MaxIterations = 50;
   
   int zoom = 1;
@@ -195,7 +195,10 @@ void main()
   double cIm = -0.18;
 
   int text_height = 15;
-
+  
+  double step_size = ((double)0.01 / ((ImageHeight/500.0)*zoom));
+  unsigned int shift_pixels = (0.1 / step_size);
+      
   if(createWindow(ImageWidth, ImageHeight + text_height) != -1)
 /*  if(createMaxWindow() != -1)*/
   {
@@ -209,6 +212,8 @@ void main()
     bool zoom_on = false;
     while (!quit) 
     {
+      step_size = ((double)0.01 / ((ImageHeight/500.0)*zoom));
+      
       if(XCheckWindowEvent(dis, win, KeyPressMask, &event))
       {
         if(event.type == KeyPress
@@ -240,16 +245,16 @@ void main()
               break;
             // Move left, right, up and down  
             case 'a':
-              cRe -= 0.1;
+              cRe -= shift_pixels * step_size;
               break;
             case 'd':
-              cRe += 0.1;
+              cRe += shift_pixels * step_size;
               break;
             case 'w':
-              cIm += 0.1;
+              cIm += shift_pixels * step_size;
               break;
             case 's': 
-              cIm -= 0.1;
+              cIm -= shift_pixels * step_size;
               break;
               
             default:
@@ -261,7 +266,7 @@ void main()
       // continue drawing otherwise
       mandelbrot(ImageWidth, ImageHeight, MaxIterations, 
                  floatToFixed(cRe), floatToFixed(cIm), 
-                 floatToFixed((double)0.01 / ((ImageHeight/500.0)*zoom)));
+                 floatToFixed(step_size));
       
       // clear old string
       for(int i = ImageHeight; i < ImageHeight + text_height; i++)
@@ -273,6 +278,8 @@ void main()
               zoom, cRe, cIm);
       
       XSetForeground(dis, gc, buildColor(255, 0, 0));
+      Font font = XLoadFont(dis, "*x15");
+      XSetFont(dis, gc, font);
       
       XDrawString(dis, win, gc, 0, ImageHeight + text_height - 2, 
                   status, strlen(status));

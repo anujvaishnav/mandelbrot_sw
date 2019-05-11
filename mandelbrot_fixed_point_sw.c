@@ -186,14 +186,18 @@ int mandelbrot(uint32_t ImageWidth, uint32_t ImageHeight,
 
 void main()
 {
-  ImageWidth = 1000;
-  ImageHeight = 1000;
+  ImageWidth = 800;
+  ImageHeight = 800;
   unsigned int MaxIterations = 50;
   
   int zoom = 1;
-  double cRe = -1.25;
-  double cIm = -0.18;
-
+  // recursive coordinates
+  //double cRe = -1.25;
+  //double cIm = -0.18;
+  // valley coordinates
+  double cRe = -0.76;
+  double cIm = -0.102;
+  
   int text_height = 15;
   
   double step_size = ((double)0.01 / ((ImageHeight/500.0)*zoom));
